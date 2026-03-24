@@ -4,6 +4,7 @@
 #include <memory>
 #include <chrono>
 #include <algorithm>
+#include <random>
 
 // Fonction utilitaires
 #include "Objet/Rayon3D.h"
@@ -26,6 +27,10 @@ int main() {
     const int width = 1920;
     const int height = 1080; 
     std::vector<unsigned char> framebuffer(width * height * 3, 0);
+
+    //Générateur de nombres aléatoires mt19937 plus performant que rand()
+    std::mt19937 gen(1337); 
+    std::uniform_real_distribution<float> dis(0.0f, 1.0f);
 
     try {
         framebuffer.resize(width * height * 3, 0);
@@ -97,23 +102,29 @@ int main() {
 
     // Chronomètre
     auto start_time = std::chrono::high_resolution_clock::now();
-
+    int samples_per_pixel = 32; // Anti-aliasing
     // Boucle de rendu
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            // Préparation du Rayon
-            float u = float(x) / (width - 1);
-            float v = 1.0f - (float(y) / (height - 1)); 
-            Vec3D direction = lower_left_corner + horizontal*u + vertical*v - camera_pos;
-            Rayon3D ray(camera_pos, direction);
+            Vec3D pixel_color(0.0f, 0.0f, 0.0f);
+            // Logique alliasing 
+            for(int i = 0;i<samples_per_pixel;i++){
+                // Préparation du Rayon
+                float u = (float(x) + dis(gen)) / (width - 1);
+                float v = 1.0f -(float(y) + dis(gen)) / (height - 1);
 
+                Vec3D direction = lower_left_corner + horizontal*u + vertical*v - camera_pos;
+                Rayon3D ray(camera_pos, direction);
+                pixel_color = pixel_color + scene.castRay(ray, 10);
+            }
 
-            Intersection3D rec;
-            int pixel_index = (y * width + x) * 3;
-            
-            Vec3D pixel_color = scene.castRay(ray, 10); 
+            pixel_color.x = pixel_color.x / samples_per_pixel;
+            pixel_color.y = pixel_color.y / samples_per_pixel;
+            pixel_color.z = pixel_color.z / samples_per_pixel;
 
             // On écrit dans le framebuffer en s'assurant de ne pas déborder (0-255)
+            //
+            int pixel_index = (y * width + x) * 3;
             framebuffer[pixel_index]     = static_cast<unsigned char>(std::min(255.0f, std::max(0.0f, pixel_color.x)));
             framebuffer[pixel_index + 1] = static_cast<unsigned char>(std::min(255.0f, std::max(0.0f, pixel_color.y)));
             framebuffer[pixel_index + 2] = static_cast<unsigned char>(std::min(255.0f, std::max(0.0f, pixel_color.z)));
