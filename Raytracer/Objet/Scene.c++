@@ -29,7 +29,6 @@ Vec3D Scene::castRay(const Rayon3D& ray, int depth) const {
     if (depth <= 0) return Vec3D(0, 0, 0); // Limite de rebonds pour éviter les boucles infinies
 
     Intersection3D rec;
-    // Si on ne touche rien : Fond (Dégradé bleu ciel)
     if (!this->hit(ray, 0.001f, 1000.0f, rec)) {
         float t = 0.5f * (ray.direction.y + 1.0f);
         return Vec3D(0.0f, 0.0f, 0.0f) * (1.0f - t) + Vec3D(0.0f, 0.0f, 0.0f) * t;
@@ -39,20 +38,24 @@ Vec3D Scene::castRay(const Rayon3D& ray, int depth) const {
     Vec3D local_color = rec.material.ka * rec.material.color; // Ambiant
 
     for (const auto& light : lights) {
-        Vec3D L = (light.Position() - rec.point).normalized();
-        Vec3D N = rec.normal;
-        Vec3D V = (ray.origine - rec.point).normalized();
-        Vec3D H = (L + V).normalized();
+        // Si on est dans l'ombre, on ignore la contribution de cette lumière
+        if(!ShadowRay(rec.point, light, rec.normal)) {
+            Vec3D L = (light.Position() - rec.point).normalized();
+            Vec3D N = rec.normal;
+            Vec3D V = (ray.origine - rec.point).normalized();
 
-        // Diffuse
-        float diff = std::max(dot(N, L), 0.0f);
-        Vec3D diffuse = rec.material.kd * diff * rec.material.color;
+            Vec3D H = (L + V).normalized();
 
-        // Spéculaire
-        float spec = std::pow(std::max(0.0f, dot(N, H)), rec.material.shininess);
-        Vec3D specular = rec.material.ks * spec * light.Color();
+            // Diffuse
+            float diff = std::max(dot(N, L), 0.0f);
+            Vec3D diffuse = rec.material.kd * diff * rec.material.color;
 
-        local_color = local_color + (diffuse + specular) * light.Intensity();
+            // Spéculaire
+            float spec = std::pow(std::max(0.0f, dot(N, H)), rec.material.shininess);
+            Vec3D specular = rec.material.ks * spec * light.Color();
+
+            local_color = local_color + (diffuse + specular) * light.Intensity();
+        }
     }
 
     // --- LOGIQUE DE RÉFLEXION ---
@@ -71,4 +74,20 @@ Vec3D Scene::castRay(const Rayon3D& ray, int depth) const {
     }
 
     return local_color;
+}
+
+bool Scene::ShadowRay(const Vec3D& point, const PointLight& light,const Vec3D& normal) const {
+    Vec3D to_light = light.Position() - point;
+    float distance_to_light = to_light.length();
+    Vec3D direction_to_light = to_light.normalized();
+
+    // On crée un rayon de point vers la lumière
+    Rayon3D shadow_ray(point + normal * 0.001f, direction_to_light); 
+
+    Intersection3D temp_rec;
+    // Si on touche un objet avant d'atteindre la lumière, alors le point est dans l'ombre
+    if (this->hit(shadow_ray, 0.001f, distance_to_light, temp_rec)) {
+        return true;
+    }
+    return false;
 }

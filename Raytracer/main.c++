@@ -36,13 +36,19 @@ int main() {
 
     // Scène 3D et Objets
     Scene scene;
-    scene.addLight(PointLight(Vec3D(1.0f, 1.0f, 1.0f), Vec3D(1.0f, 1.0f, 1.0f), 0.5f));
+    scene.addLight(PointLight(Vec3D(3.0f, 1.0f, 1.0f), Vec3D(1.0f, 1.0f, 1.0f), 0.5f));
 
     // Matériaux 
     Material mat_red(Vec3D(255.0f, 0.0f, 0.0f),
                      Vec3D(0.1f, 0.1f, 0.1f),
                      Vec3D(0.9f, 0.9f, 0.9f), 
                      Vec3D(0.5f, 0.5f, 0.5f), 64.0f, 0.0f);
+
+    Material mat_white(Vec3D(255.0f, 255.0f, 255.0f),
+                     Vec3D(0.1f, 0.1f, 0.1f),
+                     Vec3D(0.9f, 0.9f, 0.9f), 
+                     Vec3D(0.5f, 0.5f, 0.5f), 64.0f, 0.0f);
+
     Material mat_blue(Vec3D(0.0f, 0.0f, 255.0f),
                       Vec3D(0.1f, 0.1f, 0.1f), 
                       Vec3D(0.7f, 0.7f, 0.7f), 
@@ -75,7 +81,7 @@ int main() {
     scene.add(std::make_unique<Sphere>(Vec3D(-0.7f, 0.0f, -1.5f), 0.25f, mat_red));
     scene.add(std::make_unique<Sphere>(Vec3D(0.0f, 0.0f, -1.5f), 0.25f, chrome));
     scene.add(std::make_unique<Parallelepipede>(Vec3D(0.7f, 0.0f, -1.5f), 0.4f, 0.4f, 0.4f, mat_blue));
-    scene.add(std::make_unique<Parallelepipede>(Vec3D(0.0f, -0.25f, -1.5f), 10.0f, 0.01f, 10.0f, star_mat));
+    scene.add(std::make_unique<Parallelepipede>(Vec3D(0.0f, -0.25f, -1.5f), 10.0f, 0.01f, 10.0f, mat_white));
 
     // Caméra
     std::cout << "Debut du rendu..." << std::endl;

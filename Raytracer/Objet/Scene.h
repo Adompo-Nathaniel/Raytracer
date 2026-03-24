@@ -22,6 +22,7 @@ public:
 
     // Calcul de la couleur d'un rayon (Récursif)
     Vec3D castRay(const Rayon3D& ray, int depth) const;
+    bool ShadowRay(const Vec3D& point, const PointLight& light,const Vec3D& normal)const;
 };
 
 #endif
