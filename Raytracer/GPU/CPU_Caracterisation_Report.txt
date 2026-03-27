@@ -1,0 +1,112 @@
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:33:49 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.91                1.10e+09
+Sphere::hit         14.28               7.00e+07
+Scene::hit (100 obj)631.80              1.58e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:18 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.12e+09
+Sphere::hit         14.49               6.90e+07
+Scene::hit (100 obj)631.93              1.58e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:41 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.89                1.12e+09
+Sphere::hit         14.31               6.99e+07
+Scene::hit (100 obj)631.55              1.58e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:47 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.19               7.05e+07
+Scene::hit (100 obj)642.78              1.56e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:49 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.96                1.04e+09
+Sphere::hit         14.20               7.04e+07
+Scene::hit (100 obj)645.62              1.55e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:51 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.24               7.02e+07
+Scene::hit (100 obj)644.39              1.55e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:53 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.28               7.00e+07
+Scene::hit (100 obj)635.17              1.57e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:34:55 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.95                1.05e+09
+Sphere::hit         14.31               6.99e+07
+Scene::hit (100 obj)634.09              1.58e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:35:55 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.26               7.01e+07
+Scene::hit (100 obj)639.10              1.56e+06
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:36:02 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.32               6.98e+07
+Scene::hit (100 obj)6068.10             1.65e+05
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:36:57 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.12e+09
+Sphere::hit         14.37               6.96e+07
+Scene::hit (10000 obj)64032.22            1.56e+04
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:37:05 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.90                1.11e+09
+Sphere::hit         14.18               7.05e+07
+Scene::hit (10000 obj)63932.84            1.56e+04
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Wed Mar 25 23:37:13 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          0.89                1.12e+09
+Sphere::hit         14.24               7.02e+07
+Scene::hit (10000 obj)64454.31            1.55e+04
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Thu Mar 26 11:36:24 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          1.48                6.76e+08
+Sphere::hit         28.22               3.54e+07
+Scene::hit (10000 obj)12139.12            8.24e+04
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Thu Mar 26 11:36:51 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          1.53                6.53e+08
+Sphere::hit         28.90               3.46e+07
+Scene::hit (10000 obj)10750.15            9.30e+04
+------------------------------------------------------------
+
+--- RAPPORT DE CARACTERISATION CPU : Thu Mar 26 11:36:54 2026
+FONCTION            MOYENNE (ns)        DEBIT (ops/s)
+Vec3D::dot          1.52                6.58e+08
+Sphere::hit         27.51               3.64e+07
+Scene::hit (10000 obj)11094.13            9.01e+04
+------------------------------------------------------------
+
