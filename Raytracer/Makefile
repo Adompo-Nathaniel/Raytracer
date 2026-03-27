@@ -33,3 +33,6 @@ clean:
 	@if exist Rendu.ppm del /q Rendu.ppm
 
 .PHONY: all run clean
+
+caract: TestUnitaire.c++ Objet/Sphere.c++ Objet/Parallelepipede.c++ Objet/Scene.c++
+	g++ -std=c++17 -O3 TestUnitaire.c++ Objet/Sphere.c++ Objet/Parallelepipede.c++ Objet/Scene.c++ -I. -o TestUnitaire.exe
