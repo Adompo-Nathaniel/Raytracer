@@ -1,43 +1,109 @@
 #ifndef MATERIAL_LIBRARY_H
 #define MATERIAL_LIBRARY_H
-
+ 
 #include "Material.h"
-
 namespace MatLib {
-    // Matériau Rouge Mat
+ 
+
+    // Rouge plastique mat
     inline Material Red() {
-        return Material(Vec3D(255, 0, 0), Vec3D(0.1, 0.1, 0.1), Vec3D(0.9, 0.9, 0.9), 
-                        Vec3D(0.5, 0.5, 0.5), 64.0f, 0.0f, 0.0f, 1.0f);
+        return Material(
+            Vec3D(255.0f,  0.0f,  0.0f), 
+            Vec3D(0.05f, 0.05f, 0.05f), 
+            Vec3D(0.85f, 0.85f, 0.85f),   
+            Vec3D(0.35f, 0.35f, 0.35f),  
+            32.0f,                       
+            0.0f,                       
+            0.0f,                           
+            1.0f                            
+        );
     }
-
-    // Verre Bleu 
-    inline Material BlueGlass() {
-        // La couleur est légère pour laisser passer la lumière
-        return Material(Vec3D(50, 50, 255),
-                        Vec3D(0.05, 0.05, 0.05), Vec3D(0.2, 0.2, 0.2), Vec3D(1.0, 1.0, 1.0),
-                        128.0f, 0.1f, 0.9f, 1.5f);
-    }
-    
-    //Star material
-    inline Material Star_mat(){
-        return Material(Vec3D(255.0f, 255.0f, 255.0f), 
-                        Vec3D(1.0f, 1.0f, 1.0f),Vec3D(0.7f, 0.7f, 0.7f), Vec3D(0.3f, 0.3f, 0.3f),
-                        32.0f, 0.0f, 0.0f, 1.0f);
-    }
-
-    // Chrome 
+ 
+    // Chrome (miroir quasi-parfait)
     inline Material Chrome() {
-        return Material(Vec3D(255, 255, 255),
-                        Vec3D(0.0, 0.0, 0.0), Vec3D(0.1, 0.1, 0.1), Vec3D(1.0, 1.0, 1.0),
-                        256.0f, 0.95f, 0.0f, 1.0f);
+        return Material(
+            Vec3D(0.0f, 0.0f, 0.0f),
+            Vec3D(0.0f, 0.0f, 0.0f),      
+            Vec3D(0.0f, 0.0f, 0.0f),      
+            Vec3D(0.85f, 0.88f, 0.91f),   
+            255.0f,                       
+            0.98f,                        
+            0.0f,
+            1.0f
+        );
     }
+ 
+    // Or 
+    inline Material Gold() {
+        return Material(
+            Vec3D(0.0f, 0.0f, 0.0f),      
+            Vec3D(0.0f, 0.0f, 0.0f),      
+            Vec3D(0.0f, 0.0f, 0.0f),      
+            Vec3D(0.937f, 0.749f, 0.16f),    
+            255.0f,                       
+            0.95f,                        
+            0.0f,
+            1.0f
+        );
+    }
+ 
 
-    // Sol
+    // Acier brossé métal
+    inline Material Steel() {
+        return Material(
+            Vec3D(0.0f, 0.0f, 0.0f),
+            Vec3D(0.0f, 0.0f, 0.0f),    
+            Vec3D(0.0f, 0.0f, 0.0f),    
+            Vec3D(0.937f, 0.749f, 0.50f),
+            255.0f,                    
+            0.1f,                      
+            0.0f,
+            1.0f
+        );
+    }
+ 
+    // Verre 
+    inline Material BlueGlass() {
+        return Material(
+            Vec3D(210.0f, 230.0f, 255.0f), 
+            Vec3D(0.01f,  0.01f,  0.02f),
+            Vec3D(0.05f,  0.07f,  0.1f),   
+            Vec3D(1.0f,   1.0f,   1.0f),    
+            256.0f,                     
+            0.1f,                           
+            0.9f,                          
+            1.5f                            
+        );
+    }
+ 
+    // Étoile
+    inline Material Star_mat() {
+        return Material(
+            Vec3D(255.0f, 255.0f, 255.0f),
+            Vec3D(1.0f,   1.0f,   1.0f), 
+            Vec3D(0.0f,   0.0f,   0.0f),  
+            Vec3D(0.0f,   0.0f,   0.0f),   
+            1.0f,
+            0.0f,
+            0.0f,
+            1.0f
+        );
+    }
+ 
+    // Sol 
     inline Material Floor() {
-        return Material(Vec3D(100, 100, 100),
-                        Vec3D(0.1, 0.1, 0.1), Vec3D(0.8, 0.8, 0.8),Vec3D(0.2, 0.2, 0.2),
-                        32.0f, 0.5f, 0.0f, 1.0f);
+        return Material(
+            Vec3D(75.0f,  78.0f,  85.0f), 
+            Vec3D(0.04f,  0.04f,  0.04f),  
+            Vec3D(0.55f,  0.55f,  0.58f),  
+            Vec3D(0.45f,  0.45f,  0.5f),   
+            64.0f,                         
+            0.55f,                           
+            0.0f,
+            1.0f
+        );
     }
+ 
 }
-
+ 
 #endif
