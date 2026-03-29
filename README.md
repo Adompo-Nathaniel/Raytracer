@@ -44,10 +44,10 @@ Cette commande génère l'exécutable, lance la validation des tests unitaires e
 ## Rendus
 
 ![Rendu de la scène 1(CPU)](img/Output_CPU.png)
-
+**Image CPU**
 
 ![Rendu de la scène 2(GPU)](img/Output_GPU.png)
-
+**Image GPU**
 
 ---
 **Auteur** : Nathaniel - Master CHPS (M1)
