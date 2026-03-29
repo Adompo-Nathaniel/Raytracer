@@ -1,38 +1,50 @@
 CXX      := g++
-CXXFLAGS := -std=c++17 -O2 -Wall -MMD -MP
+CXXFLAGS := -std=c++17 -O3 -Wall -MMD -MP
 INCDIR   := Objet
 INCLUDES := -I. -I$(INCDIR)
 
 TARGET   := Raytracer3D.exe
 OBJDIR   := build
-SRCS := $(wildcard *.cpp) $(wildcard *.c++) $(wildcard $(INCDIR)/*.cpp) $(wildcard $(INCDIR)/*.c++)
+TEST_EXE := TestUnitaire_CPU.exe
+BENCH_EXE:= Benchmark_CPU.exe
 
-OBJS := $(SRCS:%=$(OBJDIR)/%.o)
-
-DEPS := $(OBJS:.o=.d)
+# On liste les fichiers sources d'objets (Sphere, Cube, Scene)
+# On exclut les fichiers contenant un main() pour le filtrage
+OBJ_SRCS := $(wildcard $(INCDIR)/*.c++)
+OBJ_OBJS := $(OBJ_SRCS:%=$(OBJDIR)/%.o)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	@$(CXX) $(OBJS) -o $@ -static
+# Liaison du programme principal
+$(TARGET): $(OBJDIR)/main.c++.o $(OBJ_OBJS)
+	@echo "Linking $@..."
+	@$(CXX) $^ -o $@ -static
 
+# Règle pour les tests : compile et exécute
+test: $(TEST_EXE) $(BENCH_EXE)
+	@echo "--- RUNNING TESTS ---"
+	@./$(TEST_EXE)
+	@echo "--- RUNNING BENCHMARK ---"
+	@./$(BENCH_EXE)
+
+$(TEST_EXE): $(OBJDIR)/TestUnitaire.c++.o $(OBJ_OBJS)
+	@$(CXX) $^ -o $@ -static
+
+$(BENCH_EXE): $(OBJDIR)/Benchmark.c++.o $(OBJ_OBJS)
+	@$(CXX) $^ -o $@ -static
+
+# Règle générique de compilation
 $(OBJDIR)/%.o: %
 	@echo "Compiling $<..."
-	@if not exist "$(subst /,\,$(dir $@))" mkdir "$(subst /,\,$(dir $@))" 2>nul || mkdir -p "$(dir $@)"
+	@if not exist "$(subst /,\,$(dir $@))" mkdir "$(subst /,\,$(dir $@))"
 	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
--include $(DEPS)
-
-run: all
-	@echo "Running..."
-	@./$(TARGET)
+-include $(wildcard $(OBJDIR)/*.d) $(wildcard $(OBJDIR)/$(INCDIR)/*.d)
 
 clean:
 	@if exist $(OBJDIR) rmdir /s /q $(OBJDIR)
 	@if exist $(TARGET) del /q $(TARGET)
-	@if exist Rendu.ppm del /q Rendu.ppm
+	@if exist $(TEST_EXE) del /q $(TEST_EXE)
+	@if exist $(BENCH_EXE) del /q $(BENCH_EXE)
 
-.PHONY: all run clean
-
-caract: TestUnitaire.c++ Objet/Sphere.c++ Objet/Parallelepipede.c++ Objet/Scene.c++
-	g++ -std=c++17 -O3 TestUnitaire.c++ Objet/Sphere.c++ Objet/Parallelepipede.c++ Objet/Scene.c++ -I. -o TestUnitaire.exe
+.PHONY: all clean test

@@ -28,7 +28,7 @@ public:
     __device__ bool ShadowRay(const Vec3D& point, const PointLight& light, const Vec3D& normal) const {
         Vec3D to_light = light.Position() - point;
         float dist = to_light.length();
-        Rayon3D shadow_ray(point + normal * 0.001f, to_light.normalized()); 
+        Rayon3D shadow_ray(point + normal * 0.01f, to_light.normalized()); 
         Intersection3D temp;
         return this->hit(shadow_ray, 0.001f, dist, temp);
     }
@@ -40,7 +40,28 @@ public:
         for (int depth = 0; depth < max_depth; depth++) {
             Intersection3D rec;
             if (!this->hit(current_ray, 0.001f, 1000.0f, rec)) {
-                accumulated_color = accumulated_color + throughput * Vec3D(0.02f, 0.02f, 0.05f);
+                float t = 0.5f * (current_ray.direction.y + 1.0f); // 0 = horizon, 1 = zénith
+                
+                // 1. Définition des couleurs extrêmes
+                Vec3D horizon_color(0.72f, 0.78f, 0.88f);
+                Vec3D zenith_color(0.25f, 0.35f, 0.55f);
+                Vec3D sun_glow(0.0f, 0.0f, 0.0f);
+
+                // 2. Interpolation de base du ciel
+                Vec3D base_sky = zenith_color * t + horizon_color * (1.0f - t);
+
+                // 3. Ajout de l'éclat du soleil (atténuation exponentielle très rapide vers le haut)
+                float glow_intensity = expf(-12.0f * t); 
+
+                // 4. Couleur finale
+                Vec3D sky_color = base_sky + sun_glow * glow_intensity;
+                
+                // Clamp pour éviter de dépasser 1.0 et créer des artefacts
+                sky_color.x = fminf(sky_color.x, 1.0f);
+                sky_color.y = fminf(sky_color.y, 1.0f);
+                sky_color.z = fminf(sky_color.z, 1.0f);
+
+                accumulated_color = accumulated_color + throughput * sky_color;
                 break;
             }
 

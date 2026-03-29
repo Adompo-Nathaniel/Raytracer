@@ -1,0 +1,11 @@
+===========================================
+   RAPPORT DE TEST UNITAIRE COMPLET CPU    
+===========================================
+
+Vec3D Normalization            | [OK] 
+Vec3D Dot Product              | [OK] 
+Physique : Réfraction         | [OK] Direction cohérente
+Sphere : Hit frontal           | [OK] 
+Sphere : Hit intérieur        | [OK] Détection depuis le centre
+Cube : Hit face avant          | [OK] 
+Cube : Miss (côté)           | [OK] 

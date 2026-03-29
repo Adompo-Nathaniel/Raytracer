@@ -12,7 +12,7 @@
 
 #define WIDTH 1920
 #define HEIGHT 1080
-#define SAMPLES_PER_PIXEL 9
+#define SAMPLES_PER_PIXEL 18
 
 // Kernel
 __global__ void render(Vec3D* frameBuffer, int max_x, int max_y, Scene* scene, 
@@ -41,7 +41,7 @@ __global__ void render(Vec3D* frameBuffer, int max_x, int max_y, Scene* scene,
         Rayon3D ray(camera_pos, direction);
         
         // On accumule la couleur (castRayIterative doit renvoyer du 0.0 à 1.0)
-        pixel_color = pixel_color + scene->castRayIterative(ray, 5); 
+        pixel_color = pixel_color + scene->castRayIterative(ray, 50); 
     }
     Vec3D color = pixel_color / (float)SAMPLES_PER_PIXEL;
     color.x = powf(fmax(color.x,0.0f),1.0f/2.2f);
@@ -51,7 +51,17 @@ __global__ void render(Vec3D* frameBuffer, int max_x, int max_y, Scene* scene,
     frameBuffer[j * max_x + i] = color;
 }
 
+/*
+Reste à faire :
 
+- Vérifier code et sortie GPU
+
+- Test unitaires GPU & CPU (à vérifier pour CPU)
+
+- Benchmarks pour GPU & CPU
+
+- Rapport (2h)
+*/
 int main() {
     int nx = WIDTH;
     int ny = HEIGHT;
@@ -76,36 +86,70 @@ int main() {
     auto addObjet = [&](const Objet3D& obj) { scene->objects[scene->num_objects++] = obj; };
     auto addLight = [&](const PointLight& l) { scene->lights[scene->num_lights++] = l; };
 
-    // Sphère
-    addObjet({ SPHERE, Vec3D(-1.2f, 0.0f, -2.0f), Vec3D(0,0,0), 0.25f, MatLib::Red() });
-    addObjet({ SPHERE, Vec3D(-0.6f, 0.0f, -2.0f), Vec3D(0,0,0), 0.25f, MatLib::Chrome() });
-    addObjet({ SPHERE, Vec3D( 0.0f, 0.0f, -2.0f), Vec3D(0,0,0), 0.25f, MatLib::Gold() });
-    addObjet({ SPHERE, Vec3D( 0.6f, 0.0f, -2.0f), Vec3D(0,0,0), 0.25f, MatLib::Steel() });
-    addObjet({ SPHERE, Vec3D( 1.2f, 0.0f, -2.0f), Vec3D(0,0,0), 0.25f, MatLib::BlueGlass() });
+    // Scène : un rectangle en verre sur une table avec objets de chaque côté
+    addObjet({ CUBE, Vec3D(0.0f, -0.5f, -5.0f), Vec3D(40.0f, 0.02f, 40.0f), 0, MatLib::Floor() });
+    addObjet({ CUBE, Vec3D(0.0f, 0.05f, -5.0f), Vec3D(2.8f, 0.10f, 2.8f), 0, MatLib::TableTop() });
 
-    for (int i = 0; i < 100; i++) {
-        float rx = -30.0f + (float)rand() / (RAND_MAX / 60.0f);
-        float ry = -10.0f + (float)rand() / (RAND_MAX / 40.0f);
-        float rz = -5.0f - (float)rand() / (RAND_MAX / 45.0f);
-        addObjet({ SPHERE, Vec3D(rx, ry, rz), Vec3D(0,0,0), 0.05f, MatLib::Star_mat() });
-    }
+    // Grand rectangle en verre au centre (long et fin)
+    addObjet({ CUBE, Vec3D(0.0f, 0.25f, -5.0f), Vec3D(2.5f, 0.50f, 0.15f), 0, MatLib::BlueGlass() });
 
-    // Cube
-    addObjet({ CUBE, Vec3D(0.0f, -0.25f, -2.0f), Vec3D(10.0f, 0.01f, 10.0f), 0, MatLib::Floor() });
+    // Objets à GAUCHE du rectangle en verre
+    // Sphères en or et chrome
+    addObjet({ SPHERE, Vec3D(-0.8f, 0.22f, -4.2f), Vec3D(0,0,0), 0.18f, MatLib::Gold() });
+    addObjet({ SPHERE, Vec3D(-1.0f, 0.22f, -4.8f), Vec3D(0,0,0), 0.16f, MatLib::Chrome() });
+    addObjet({ SPHERE, Vec3D(-0.6f, 0.22f, -5.5f), Vec3D(0,0,0), 0.17f, MatLib::Red() });
+    
+    // Cubes en steel, blue, gold
+    addObjet({ CUBE, Vec3D(-1.0f, 0.18f, -4.4f), Vec3D(0.20f, 0.20f, 0.20f), 0, MatLib::Steel() });
+    addObjet({ CUBE, Vec3D(-0.7f, 0.18f, -5.2f), Vec3D(0.18f, 0.18f, 0.18f), 0, MatLib::Blue() });
 
-    // Lumière
-    addLight(PointLight(Vec3D(3.0f, 1.0f, 1.0f), Vec3D(1.0f, 1.0f, 1.0f), 0.5f));
+    // Objets à DROITE du rectangle en verre
+    // Sphères variées
+    addObjet({ SPHERE, Vec3D(0.8f, 0.22f, -4.2f), Vec3D(0,0,0), 0.18f, MatLib::Green() });
+    addObjet({ SPHERE, Vec3D(1.0f, 0.22f, -4.8f), Vec3D(0,0,0), 0.16f, MatLib::White() });
+    addObjet({ SPHERE, Vec3D(0.6f, 0.22f, -5.5f), Vec3D(0,0,0), 0.17f, MatLib::Gold() });
+    
+    // Cubes variés
+    addObjet({ CUBE, Vec3D(1.0f, 0.18f, -4.4f), Vec3D(0.20f, 0.20f, 0.20f), 0, MatLib::Chrome() });
+    addObjet({ CUBE, Vec3D(0.7f, 0.18f, -5.2f), Vec3D(0.18f, 0.18f, 0.18f), 0, MatLib::Black() });
 
-    // Caméra
-    float aspect_ratio = float(nx) / float(ny);
-    float focal = 2.0f;
-    float viewport_height = 2.0f;
+
+
+    addLight(PointLight(Vec3D( 1.5f, 3.0f, -2.5f), Vec3D(1.0f, 0.88f, 0.65f), 1.0f));
+    addLight(PointLight(Vec3D(-2.0f, 2.5f, -4.5f), Vec3D(0.55f, 0.65f, 1.0f),  0.8f));
+    //addLight(PointLight(Vec3D( 0.0f, 4.5f, -5.5f), Vec3D(1.0f, 1.0f,  1.0f),  0.5f));
+
+    // vue plongeant de la scène
+    Vec3D lookfrom(0.0f, 3.2f, -3.0f);
+    Vec3D lookat(0.0f, 0.12f, -5.0f);
+    Vec3D vup(0.0f, 1.0f, 0.0f);
+    float vfov = 55.0f;
+
+    // déclaration du ratio manquante
+    float aspect_ratio = (float)nx / (float)ny;
+
+    Vec3D w = (lookfrom - lookat).normalized();
+    
+    // calcul manuel du produit vectoriel au cas où cross() pose problème
+    Vec3D u_tmp(vup.y * w.z - vup.z * w.y, 
+                vup.z * w.x - vup.x * w.z, 
+                vup.x * w.y - vup.y * w.x);
+    Vec3D u = u_tmp.normalized();
+
+    // second produit vectoriel manuel
+    Vec3D v_cam(w.y * u.z - w.z * u.y, 
+                w.z * u.x - w.x * u.z, 
+                w.x * u.y - w.y * u.x);
+
+    float theta = vfov * 3.14159265f / 180.0f;
+    float h = tanf(theta / 2.0f);
+    float viewport_height = 2.0f * h;
     float viewport_width = aspect_ratio * viewport_height;
     
-    Vec3D origin(0.0f, 0.0f, 0.0f);
-    Vec3D horizontal(viewport_width, 0.0f, 0.0f);
-    Vec3D vertical(0.0f, viewport_height, 0.0f);
-    Vec3D lower_left_corner = origin - horizontal/2 - vertical/2 - Vec3D(0.0f, 0.0f, focal);
+    Vec3D horizontal_vec = u * viewport_width;
+    Vec3D vertical_vec = v_cam * viewport_height;
+    
+    Vec3D lower_left_corner = lookfrom - horizontal_vec/2.0f - vertical_vec/2.0f - w;
 
     int t = 16;
     dim3 blocks(nx/t+1, ny/t+1);
@@ -115,9 +159,9 @@ int main() {
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
-    // Lancement kernel AVEC la scène
+    // lancement kernel
     cudaEventRecord(start);
-    render<<<blocks, threads>>>(frameBuffer, nx, ny, scene, lower_left_corner, horizontal, vertical, origin);
+    render<<<blocks, threads>>>(frameBuffer, nx, ny, scene, lower_left_corner, horizontal_vec, vertical_vec, lookfrom);
     cudaEventRecord(stop);
     cudaError_t launchErr = cudaGetLastError();
 
